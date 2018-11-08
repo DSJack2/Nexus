@@ -25,7 +25,7 @@ public class Cars extends AppCompatActivity {
 
         // Uber API Config
         SessionConfiguration config = new SessionConfiguration.Builder()
-                .setClientId("xxxxxxx")
+                .setClientId("xxxxxxxx")
                 .setServerToken("xxxxxxx")
 //                .setRedirectUri("http://localhost")
                 .setScopes(Arrays.asList(Scope.RIDE_WIDGETS))
@@ -39,11 +39,11 @@ public class Cars extends AppCompatActivity {
 
         // Lyft API Config
         ApiConfig lyftApiConfig = new ApiConfig.Builder()
-                .setClientId("xxxxxxxxx")
-                .setClientToken("xxxxxxxxx")
+                .setClientId("xxxxxxx")
+                .setClientToken("xxxxxxxxxxxxxxxx")
                 .build();
 
-        LyftButton lyftRequestButton = findViewById(R.id.request_button);
+        LyftButton lyftRequestButton = findViewById(R.id.lyft_button);
         lyftRequestButton.setApiConfig(lyftApiConfig);
         lyftRequestButton.setLyftStyle(LyftStyle.HOT_PINK);
     }
