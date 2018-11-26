@@ -1,11 +1,16 @@
 package example.dsjac.nexus;
 
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.app.Activity;
 import android.widget.RelativeLayout;
 
 import com.lyft.lyftbutton.LyftButton;
 import com.lyft.lyftbutton.LyftStyle;
+import com.lyft.lyftbutton.RideParams;
+import com.lyft.lyftbutton.RideTypeEnum;
+import com.lyft.networking.ApiConfig;
 import com.uber.sdk.android.core.UberSdk;
 import com.uber.sdk.rides.client.ServerTokenSession;
 import com.uber.sdk.android.rides.RideRequestButton;
@@ -27,16 +32,17 @@ public class Cars extends AppCompatActivity {
 
         // Uber API Config
         SessionConfiguration config = new SessionConfiguration.Builder()
-                .setClientId("xxxxxx")
+                .setClientId("xxxxx")
                 .setServerToken("xxxxx")
 //                .setRedirectUri("http://localhost")
                 .setScopes(Arrays.asList(Scope.RIDE_WIDGETS))
+                .setEnvironment(SessionConfiguration.Environment.PRODUCTION)
                 .build();
         UberSdk.initialize(config);
 
         // Create the ride request object to be used on Cars Activity
         RideRequestButton uberRequestButton = new RideRequestButton(Cars.this);
-        RelativeLayout layout = new RelativeLayout(this);
+        ConstraintLayout layout = new ConstraintLayout(this);
         layout.addView(uberRequestButton);
 
         // set parameters for the uber ride button
@@ -57,12 +63,20 @@ public class Cars extends AppCompatActivity {
 
         // Lyft API Config
         ApiConfig lyftApiConfig = new ApiConfig.Builder()
-                .setClientId("xxxxxxx")
-                .setClientToken("xxxxxx")
+                .setClientId("xxxxx")
+                .setClientToken("xxxx")
                 .build();
 
         LyftButton lyftRequestButton = findViewById(R.id.lyft_button);
         lyftRequestButton.setApiConfig(lyftApiConfig);
         lyftRequestButton.setLyftStyle(LyftStyle.HOT_PINK);
+
+        RideParams.Builder rideParamsBuilder = new RideParams.Builder()
+                .setPickupLocation(37.7766048, -122.3943629)
+                .setDropoffLocation(37.759234, -122.4135125);
+        rideParamsBuilder.setRideTypeEnum(RideTypeEnum.CLASSIC);
+
+        lyftRequestButton.setRideParams(rideParamsBuilder.build());
+        lyftRequestButton.load();
     }
 }
