@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Nexus</string>
     <string name="title_activity_maps">Map</string>
-    <string name="pick_up">Enter pickup location</string>
-    <string name="drop_off">Enter final destination</string>
+    <string name="pick_up">Enter Pickup Location</string>
+    <string name="drop_off">Enter Dropoff Destination</string>
+    <string name="google_maps_key">AIzaSyBDV0iep_bgBjLzp3jL1nFbtMcOzQosJJ4</string>
 </resources>

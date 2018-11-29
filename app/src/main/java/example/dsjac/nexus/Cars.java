@@ -21,14 +21,30 @@ import com.uber.sdk.rides.*;
 
 import com.lyft.networking.ApiConfig;
 
+import android.support.v4.app.FragmentActivity;
+import android.os.Bundle;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.util.Arrays;
 
-public class Cars extends AppCompatActivity {
+public class Cars extends AppCompatActivity implements OnMapReadyCallback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cars);
+
+        // Get the SupportMapFragment and request notification
+        // when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         // Uber API Config
         SessionConfiguration config = new SessionConfiguration.Builder()
@@ -72,11 +88,34 @@ public class Cars extends AppCompatActivity {
         lyftRequestButton.setLyftStyle(LyftStyle.HOT_PINK);
 
         RideParams.Builder rideParamsBuilder = new RideParams.Builder()
-                .setPickupLocation(37.7766048, -122.3943629)
-                .setDropoffLocation(37.759234, -122.4135125);
+                .setPickupLocation(36.1447, -86.8027)
+                .setDropoffLocation(36.1668, -86.8276);
         rideParamsBuilder.setRideTypeEnum(RideTypeEnum.CLASSIC);
 
         lyftRequestButton.setRideParams(rideParamsBuilder.build());
         lyftRequestButton.load();
+    }
+
+    /**
+     * Manipulates the map once available.
+     * This callback is triggered when the map is ready to be used.
+     * This is where we can add markers or lines, add listeners or move the camera. In this case,
+     * we just add a marker near Sydney, Australia.
+     * If Google Play services is not installed on the device, the user will be prompted to install
+     * it inside the SupportMapFragment. This method will only be triggered once the user has
+     * installed Google Play services and returned to the app.
+     */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        // Add a marker in Sydney, Australia,
+        // and move the map's camera to the same location.
+        LatLng vandy = new LatLng(36.1447, -86.8027);
+        LatLng tsu = new LatLng(36.1668, -86.8276);
+        googleMap.addMarker(new MarkerOptions().position(vandy)
+                .title("Marker at Vandy"));
+        googleMap.addMarker(new MarkerOptions().position(tsu)
+                .title("Marker at TSU"));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(vandy));
+        googleMap.animateCamera( CameraUpdateFactory.zoomTo( 12.0f ) );
     }
 }
