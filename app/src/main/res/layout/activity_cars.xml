@@ -23,22 +23,38 @@
             android:layout_height="15dp"
             android:id="@+id/ic_magnify"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:src="@drawable/ic_magnify"/>
 
         <EditText
             android:id="@+id/input_search"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="0dp"
-            android:layout_toRightOf="@+id/ic_magnify"
+            android:layout_marginStart="0dp"
+            android:layout_toEndOf="@+id/ic_magnify"
             android:background="@null"
-            android:hint="Enter Address, City or Zip Code"
+            android:hint="@string/drop_off"
             android:imeOptions="actionSearch"
             android:textColor="#000"
             android:textSize="15sp" />
 
+        <Button
+            android:id="@+id/B_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="Go" />
+        <!--android:onClick="onClick"-->
+
     </RelativeLayout>
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/map"
+        tools:context=".MapsActivity"
+        android:name="com.google.android.gms.maps.SupportMapFragment" />
 
     <com.uber.sdk.android.rides.RideRequestButton
         android:id="@+id/rideRequestButton"
