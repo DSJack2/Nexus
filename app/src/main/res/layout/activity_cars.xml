@@ -40,7 +40,7 @@
         tools:layout_editor_absoluteY="30dp" />
 
     <com.uber.sdk.android.rides.RideRequestButton
-        android:id="@+id/rideRequestButton"
+        android:id="@+id/uberRequestButton"
         android:layout_width="318dp"
         android:layout_height="53dp"
         android:layout_marginStart="8dp"

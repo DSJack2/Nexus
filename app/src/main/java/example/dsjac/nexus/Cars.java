@@ -176,14 +176,12 @@ public class Cars extends AppCompatActivity implements
 
 
         // Create the ride request object to be used on Cars Activity
-        RideRequestButton uberRequestButton = findViewById(R.id.rideRequestButton);
-        ;
-        ConstraintLayout layout = new ConstraintLayout(this);
+        RideRequestButton uberRequestButton = findViewById(R.id.uberRequestButton);
+        //ConstraintLayout layout = new ConstraintLayout(this);
         //layout.addView(uberRequestButton);
 
         // set parameters for the uber ride button
         RideParameters rideParams = new RideParameters.Builder()
-                .setProductId("a1111c8c-c720-46c3-8534-2fcdd730040d")
                 .setPickupLocation(currentLatitude, currentLongitude, "Current Location", "")
                 .setDropoffLocation(destinationLatitude, destinationLongitude, (String) place.getName(), "")
                 .build();
@@ -198,9 +196,6 @@ public class Cars extends AppCompatActivity implements
                 .build();
         UberSdk.initialize(uberConfig);
         ServerTokenSession uberSession = new ServerTokenSession(uberConfig);
-        uberRequestButton.setSession(uberSession);
-        uberRequestButton.setRideParameters(rideParams);
-
         RideRequestButtonCallback callback = new RideRequestButtonCallback() {
 
             @Override
@@ -218,9 +213,8 @@ public class Cars extends AppCompatActivity implements
                 Log.d("testThrow", throwable.toString());
             }
         };
-
-        // Make request for ride information
-        //getUberEstimate(37.775304, -122.417522, 37.759234, -122.4135125);
+        uberRequestButton.setRideParameters(rideParams);
+        uberRequestButton.setSession(uberSession);
         uberRequestButton.setCallback(callback);
         uberRequestButton.loadRideInformation();
     }
