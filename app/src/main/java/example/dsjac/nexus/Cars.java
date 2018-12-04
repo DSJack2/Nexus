@@ -162,8 +162,8 @@ public class Cars extends AppCompatActivity implements
         destinationLongitude = destination.longitude;
 
         ApiConfig lyftApiConfig = new ApiConfig.Builder()
-                .setClientId("uG3ayZblOqHr")
-                .setClientToken("XiJQCYnZR6qhvPsnyMbOyrgIQB2esrddDmBwSIVZbDO9fRriljuBKQaIg3NZOI2ssf6XsGq4E/K07tOUyG0QZQQEBY4kOSoMsGg90lYWXd+V1H8yAfB8llc=")
+                .setClientId("-")
+                .setClientToken("-")
                 .build();
 
         LyftButton lyftRequestButton = findViewById(R.id.lyft_button);
@@ -187,8 +187,8 @@ public class Cars extends AppCompatActivity implements
 
         // Uber API Config
         SessionConfiguration config = new SessionConfiguration.Builder()
-                .setClientId("ZWBGzmZHqvaCQXK3Tf2UVc3ijY3iyOoH")
-                .setServerToken("ExQMNvmuTdVGFEs9eVdVUzTO25IwkycKqG9KP7tP")
+                .setClientId("-")
+                .setServerToken("-")
 //                .setRedirectUri("http://localhost")
                 .setScopes(Arrays.asList(Scope.RIDE_WIDGETS))
                 .setEnvironment(SessionConfiguration.Environment.PRODUCTION)
@@ -203,7 +203,7 @@ public class Cars extends AppCompatActivity implements
         // set parameters for the uber ride button
         RideParameters rideParams = new RideParameters.Builder()
                 // Optional product_id from /v1/products endpoint (e.g. UberX). If not provided, most cost-efficient product will be used
-                .setProductId("a1111c8c-c720-46c3-8534-2fcdd730040d")
+                .setProductId("-")
                 // Required for price estimates; lat (Double), lng (Double), nickname (String), formatted address (String) of dropoff location
                 .setDropoffLocation(
                         37.775304, -122.417522, "Uber HQ", "1455 Market Street, San Francisco")
