@@ -1,31 +1,26 @@
 package example.dsjac.nexus;
+
 import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Build;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.app.Activity;
 import android.util.Log;
-import android.view.Window;
-import android.widget.RelativeLayout;
 
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.lyft.lyftbutton.LyftButton;
@@ -34,28 +29,12 @@ import com.lyft.lyftbutton.RideParams;
 import com.lyft.lyftbutton.RideTypeEnum;
 import com.lyft.networking.ApiConfig;
 import com.uber.sdk.android.core.UberSdk;
-import com.uber.sdk.android.rides.RideRequestButtonCallback;
-import com.uber.sdk.rides.client.ServerTokenSession;
-import com.uber.sdk.android.rides.RideRequestButton;
 import com.uber.sdk.android.rides.RideParameters;
+import com.uber.sdk.android.rides.RideRequestButton;
+import com.uber.sdk.android.rides.RideRequestButtonCallback;
 import com.uber.sdk.core.auth.Scope;
+import com.uber.sdk.rides.client.ServerTokenSession;
 import com.uber.sdk.rides.client.SessionConfiguration;
-import com.uber.sdk.rides.*;
-
-import com.lyft.networking.ApiConfig;
-
-import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
-import android.widget.Toast;
-
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.uber.sdk.rides.client.error.ApiError;
 
 import org.json.JSONArray;
@@ -68,10 +47,9 @@ import cz.msebera.android.httpclient.Header;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-
 public class Cars extends AppCompatActivity implements
-               OnMapReadyCallback,
-               ActivityCompat.OnRequestPermissionsResultCallback {
+        OnMapReadyCallback,
+        ActivityCompat.OnRequestPermissionsResultCallback {
 
     private GoogleMap mMap;
     private static double currentLatitude;
@@ -110,14 +88,14 @@ public class Cars extends AppCompatActivity implements
         client = LocationServices.getFusedLocationProviderClient(this);
 
 
-        if(ActivityCompat.checkSelfPermission(Cars.this, Manifest.permission.ACCESS_FINE_LOCATION) > 0){
+        if (ActivityCompat.checkSelfPermission(Cars.this, Manifest.permission.ACCESS_FINE_LOCATION) > 0) {
             return;
         }
 
         client.getLastLocation().addOnSuccessListener(Cars.this, new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                if(location != null){
+                if (location != null) {
                     updateLocation(location);
                     LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
                     mMap.addMarker(new MarkerOptions().position(currentLocation)
@@ -139,6 +117,7 @@ public class Cars extends AppCompatActivity implements
                             configureLyft(place);
                             configureUber(place);
                         }
+
                         @Override
                         public void onError(Status status) {
                             // TODO: Handle the error.
@@ -150,22 +129,22 @@ public class Cars extends AppCompatActivity implements
         });
     }
 
-    private void requestPermission(){
+    private void requestPermission() {
         ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, 1);
     }
 
-    public void updateLocation(Location location){
+    public void updateLocation(Location location) {
         currentLatitude = location.getLatitude();
         currentLongitude = location.getLongitude();
     }
 
-    public void updateDestination(Place place){
+    public void updateDestination(Place place) {
         LatLng destination = place.getLatLng();
         destinationLatitude = destination.latitude;
         destinationLongitude = destination.longitude;
     }
 
-    public void configureLyft(Place place){
+    public void configureLyft(Place place) {
 
         LatLng destination = place.getLatLng();
         destinationLatitude = destination.latitude;
@@ -189,7 +168,7 @@ public class Cars extends AppCompatActivity implements
         lyftRequestButton.load();
     }
 
-    public void configureUber(Place place){
+    public void configureUber(Place place) {
 
         LatLng destination = place.getLatLng();
         destinationLatitude = destination.latitude;
@@ -197,7 +176,8 @@ public class Cars extends AppCompatActivity implements
 
 
         // Create the ride request object to be used on Cars Activity
-        RideRequestButton uberRequestButton = findViewById(R.id.rideRequestButton);;
+        RideRequestButton uberRequestButton = findViewById(R.id.rideRequestButton);
+        ;
         ConstraintLayout layout = new ConstraintLayout(this);
         //layout.addView(uberRequestButton);
 
@@ -210,12 +190,12 @@ public class Cars extends AppCompatActivity implements
 
         // Uber API Config
         SessionConfiguration uberConfig = new SessionConfiguration.Builder()
-            .setClientId("-")
-            .setServerToken("-")
-            .setRedirectUri("http://localhost:3000")
-            .setScopes(Arrays.asList(Scope.RIDE_WIDGETS))
-            .setEnvironment(SessionConfiguration.Environment.SANDBOX)
-            .build();
+                .setClientId("-")
+                .setServerToken("-")
+                .setRedirectUri("http://localhost:3000")
+                .setScopes(Arrays.asList(Scope.RIDE_WIDGETS))
+                .setEnvironment(SessionConfiguration.Environment.SANDBOX)
+                .build();
         UberSdk.initialize(uberConfig);
         ServerTokenSession uberSession = new ServerTokenSession(uberConfig);
         uberRequestButton.setSession(uberSession);
@@ -259,14 +239,14 @@ public class Cars extends AppCompatActivity implements
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray prices) {
                 int lowPrice, highPrice;
-                for(int i = 0; i < prices.length(); ++i){
+                for (int i = 0; i < prices.length(); ++i) {
                     JSONObject obj = prices.optJSONObject(i);
-                    try{
-                        if(obj.get("localized_display_name") == "UberX"){
+                    try {
+                        if (obj.get("localized_display_name") == "UberX") {
                             lowPrice = (int) obj.get("low_estimate");
                             highPrice = (int) obj.get("high_estimate");
                         }
-                    }catch (JSONException e){
+                    } catch (JSONException e) {
                         //not sure what to do here
                     }
                 }
@@ -278,13 +258,13 @@ public class Cars extends AppCompatActivity implements
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray times) {
                 int time;
-                for(int i = 0; i < times.length(); ++i){
+                for (int i = 0; i < times.length(); ++i) {
                     JSONObject obj = times.optJSONObject(i);
-                    try{
-                        if(obj.get("localized_display_name") == "uberX"){
+                    try {
+                        if (obj.get("localized_display_name") == "uberX") {
                             time = (int) obj.get("estimate") / 60;
                         }
-                    }catch (JSONException e){
+                    } catch (JSONException e) {
                         //not sure what to do here
                     }
                 }
@@ -304,18 +284,18 @@ public class Cars extends AppCompatActivity implements
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray prices) {
-                    int lowPrice, highPrice;
-                    for(int i = 0; i < prices.length(); ++i){
-                        JSONObject obj = prices.optJSONObject(i);
-                        try{
-                            if(obj.get("ride_type") == "lyft"){
-                                lowPrice = (int) obj.get("estimated_cost_cents_min") / 100;
-                                highPrice = (int) obj.get("estimated_cost_cents_max") / 100;
-                            }
-                        }catch (JSONException e){
-                            //not sure what to do here
+                int lowPrice, highPrice;
+                for (int i = 0; i < prices.length(); ++i) {
+                    JSONObject obj = prices.optJSONObject(i);
+                    try {
+                        if (obj.get("ride_type") == "lyft") {
+                            lowPrice = (int) obj.get("estimated_cost_cents_min") / 100;
+                            highPrice = (int) obj.get("estimated_cost_cents_max") / 100;
                         }
+                    } catch (JSONException e) {
+                        //not sure what to do here
                     }
+                }
 
             }
         });
@@ -325,13 +305,13 @@ public class Cars extends AppCompatActivity implements
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray times) {
                 int time;
-                for(int i = 0; i < times.length(); ++i){
+                for (int i = 0; i < times.length(); ++i) {
                     JSONObject obj = times.optJSONObject(i);
-                    try{
-                        if(obj.get("ride_type") == "lyft"){
+                    try {
+                        if (obj.get("ride_type") == "lyft") {
                             time = (int) obj.get("eta_seconds ") / 60;
                         }
-                    }catch (JSONException e){
+                    } catch (JSONException e) {
                         //not sure what to do here
                     }
                 }
