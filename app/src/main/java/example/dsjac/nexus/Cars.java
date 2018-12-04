@@ -5,6 +5,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.widget.RelativeLayout;
 import example.dsjac.nexus.NexusRestClient;
 
@@ -56,36 +57,52 @@ public class Cars extends AppCompatActivity implements OnMapReadyCallback {
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // Create the ride request object to be used on Cars Activity
+        RideRequestButton uberRequestButton = findViewById(R.id.rideRequestButton);;
+        ConstraintLayout layout = new ConstraintLayout(this);
+        //layout.addView(uberRequestButton);
+
+        // set parameters for the uber ride button
+        RideParameters rideParams = new RideParameters.Builder()
+                .setProductId("a1111c8c-c720-46c3-8534-2fcdd730040d")
+                .setPickupLocation(36.1447, -86.8027, "Vanderbilt University", "2201 West End Ave, Nashville")
+                .setDropoffLocation(36.1668, -86.8276, "Tennessee State University", "3500 John A Merritt Blvd, Nashville")
+                .build();
+
         // Uber API Config
         SessionConfiguration uberConfig = new SessionConfiguration.Builder()
-            .setClientId("xxxxxx")
+            .setClientId("xxxxx")
             .setServerToken("xxxxx")
+            .setRedirectUri("http://localhost:3000")
             .setScopes(Arrays.asList(Scope.RIDE_WIDGETS))
             .setEnvironment(SessionConfiguration.Environment.SANDBOX)
             .build();
         UberSdk.initialize(uberConfig);
         ServerTokenSession uberSession = new ServerTokenSession(uberConfig);
-
-        // Create the ride request object to be used on Cars Activity
-        RideRequestButton uberRequestButton = new RideRequestButton(Cars.this);
-        ConstraintLayout layout = new ConstraintLayout(this);
-        layout.addView(uberRequestButton);
-
-        // set parameters for the uber ride button
-        RideParameters rideParams = new RideParameters.Builder()
-            // Optional product_id from /v1/products endpoint (e.g. UberX). If not provided, most cost-efficient product will be used
-            .setProductId("a1111c8c-c720-46c3-8534-2fcdd730040d")
-            // Required for price estimates; lat (Double), lng (Double), nickname (String), formatted address (String) of dropoff location
-            .setDropoffLocation(37.775304, -122.417522, "Uber HQ", "1455 Market Street, San Francisco")
-            // Required for pickup estimates; lat (Double), lng (Double), nickname (String), formatted address (String) of pickup location
-            .setPickupLocation(37.775304, -122.417522, "Uber HQ", "1455 Market Street, San Francisco")
-            .build();
-
-        uberRequestButton.setRideParameters(rideParams);
         uberRequestButton.setSession(uberSession);
+        uberRequestButton.setRideParameters(rideParams);
+
+        RideRequestButtonCallback callback = new RideRequestButtonCallback() {
+
+            @Override
+            public void onRideInformationLoaded() {
+
+            }
+
+            @Override
+            public void onError(ApiError apiError) {
+                Log.d("testApi", apiError.toString());
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Log.d("testThrow", throwable.toString());
+            }
+        };
 
         // Make request for ride information
-        getUberEstimate(37.775304, -122.417522, 37.759234, -122.4135125);
+        //getUberEstimate(37.775304, -122.417522, 37.759234, -122.4135125);
+        uberRequestButton.setCallback(callback);
         uberRequestButton.loadRideInformation();
 
 
@@ -93,8 +110,8 @@ public class Cars extends AppCompatActivity implements OnMapReadyCallback {
 
         // Lyft API Config
         ApiConfig lyftApiConfig = new ApiConfig.Builder()
-                .setClientId("xxxx")
-                .setClientToken("xxxxx")
+                .setClientId("xxxxxxx")
+                .setClientToken("xxxxxx")
                 .build();
 
         LyftButton lyftRequestButton = findViewById(R.id.lyft_button);
@@ -102,7 +119,7 @@ public class Cars extends AppCompatActivity implements OnMapReadyCallback {
         lyftRequestButton.setLyftStyle(LyftStyle.HOT_PINK);
 
         RideParams.Builder rideParamsBuilder = new RideParams.Builder()
-            .setPickupLocation(36.1447, -122.3943629)
+            .setPickupLocation(36.1447, -86.8027)
             .setDropoffLocation(36.1668, -86.8276);
 
         rideParamsBuilder.setRideTypeEnum(RideTypeEnum.CLASSIC);
