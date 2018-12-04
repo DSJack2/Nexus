@@ -11,50 +11,32 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="10dp"
+        android:paddingTop="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
-        android:elevation="10dp"
+        android:elevation="5dp"
         android:background="@drawable/white_border"
         android:id="@+id/relLayout1">
 
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:id="@+id/ic_magnify"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/ic_magnify"/>
-
-        <EditText
-            android:id="@+id/input_search"
+        <fragment
+            android:id="@+id/place_autocomplete_fragment"
+            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="0dp"
-            android:layout_toEndOf="@+id/ic_magnify"
             android:background="@null"
-            android:hint="@string/drop_off"
-            android:imeOptions="actionSearch"
-            android:textColor="#000"
             android:textSize="15sp" />
-
-        <Button
-            android:id="@+id/B_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="Go" />
-        <!--android:onClick="onClick"-->
 
     </RelativeLayout>
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/map"
         tools:context=".MapsActivity"
-        android:name="com.google.android.gms.maps.SupportMapFragment" />
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="30dp" />
 
     <com.uber.sdk.android.rides.RideRequestButton
         android:id="@+id/rideRequestButton"
