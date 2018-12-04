@@ -10,7 +10,8 @@ import example.dsjac.nexus.NexusRestClient;
 
 import org.json.*;
 import com.loopj.android.http.*;
-import org.apache.http.Header;
+import cz.msebera.android.httpclient.Header;
+import org.json.JSONObject;
 
 import com.lyft.lyftbutton.LyftButton;
 import com.lyft.lyftbutton.LyftStyle;
@@ -92,8 +93,8 @@ public class Cars extends AppCompatActivity implements OnMapReadyCallback {
 
         // Lyft API Config
         ApiConfig lyftApiConfig = new ApiConfig.Builder()
-                .setClientId("xxxxxx")
-                .setClientToken("xxxxxx")
+                .setClientId("xxxx")
+                .setClientToken("xxxxx")
                 .build();
 
         LyftButton lyftRequestButton = findViewById(R.id.lyft_button);
@@ -101,8 +102,8 @@ public class Cars extends AppCompatActivity implements OnMapReadyCallback {
         lyftRequestButton.setLyftStyle(LyftStyle.HOT_PINK);
 
         RideParams.Builder rideParamsBuilder = new RideParams.Builder()
-            .setPickupLocation(37.775304, -122.417522)
-            .setDropoffLocation(37.759234, -122.4135125);
+            .setPickupLocation(36.1447, -122.3943629)
+            .setDropoffLocation(36.1668, -86.8276);
 
         rideParamsBuilder.setRideTypeEnum(RideTypeEnum.CLASSIC);
 
@@ -119,17 +120,89 @@ public class Cars extends AppCompatActivity implements OnMapReadyCallback {
         params.put("end_latitude", endLatitude);
         params.put("end_latitude", endLongitude);
 
-        client.get("api/uberPriceEstimate", params, new JsonHttpResponseHandler() {
+        NexusRestClient.get("api/uberPriceEstimate", params, new JsonHttpResponseHandler() {
 
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, JSONObject repsonse){
-//
-//            }
-//
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, JSONArray prices) {
-//
-//            }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray prices) {
+                int lowPrice, highPrice;
+                for(int i = 0; i < prices.length(); ++i){
+                    JSONObject obj = prices.optJSONObject(i);
+                    try{
+                        if(obj.get("localized_display_name") == "UberX"){
+                            lowPrice = (int) obj.get("low_estimate");
+                            highPrice = (int) obj.get("high_estimate");
+                        }
+                    }catch (JSONException e){
+                        //not sure what to do here
+                    }
+                }
+            }
+        });
+
+        NexusRestClient.get("api/uberTimeEstimate", params, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray times) {
+                int time;
+                for(int i = 0; i < times.length(); ++i){
+                    JSONObject obj = times.optJSONObject(i);
+                    try{
+                        if(obj.get("localized_display_name") == "uberX"){
+                            time = (int) obj.get("estimate") / 60;
+                        }
+                    }catch (JSONException e){
+                        //not sure what to do here
+                    }
+                }
+            }
+        });
+    }
+
+    private void getLyftEstimate(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
+        NexusRestClient client = new NexusRestClient();
+        RequestParams params = new RequestParams();
+        params.put("start_latitude", startLatitude);
+        params.put("start_longitude", startLongitude);
+        params.put("end_latitude", endLatitude);
+        params.put("end_latitude", endLongitude);
+
+        NexusRestClient.get("api/lyftPriceEstimate", params, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray prices) {
+                    int lowPrice, highPrice;
+                    for(int i = 0; i < prices.length(); ++i){
+                        JSONObject obj = prices.optJSONObject(i);
+                        try{
+                            if(obj.get("ride_type") == "lyft"){
+                                lowPrice = (int) obj.get("estimated_cost_cents_min") / 100;
+                                highPrice = (int) obj.get("estimated_cost_cents_max") / 100;
+                            }
+                        }catch (JSONException e){
+                            //not sure what to do here
+                        }
+                    }
+
+            }
+        });
+
+        NexusRestClient.get("api/lyftTimeEstimate", params, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray times) {
+                int time;
+                for(int i = 0; i < times.length(); ++i){
+                    JSONObject obj = times.optJSONObject(i);
+                    try{
+                        if(obj.get("ride_type") == "lyft"){
+                            time = (int) obj.get("eta_seconds ") / 60;
+                        }
+                    }catch (JSONException e){
+                        //not sure what to do here
+                    }
+                }
+            }
+
         });
     }
 
