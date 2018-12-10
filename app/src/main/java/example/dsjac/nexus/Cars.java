@@ -151,8 +151,8 @@ public class Cars extends AppCompatActivity implements
         destinationLongitude = destination.longitude;
 
         ApiConfig lyftApiConfig = new ApiConfig.Builder()
-                .setClientId("-")
-                .setClientToken("-")
+                .setClientId(Keys.LYFT_CLIENT_ID)
+                .setClientToken(Keys.LYFT_SERVER_TOKEN)
                 .build();
 
         LyftButton lyftRequestButton = findViewById(R.id.lyft_button);
@@ -182,14 +182,15 @@ public class Cars extends AppCompatActivity implements
 
         // set parameters for the uber ride button
         RideParameters rideParams = new RideParameters.Builder()
+                .setProductId("717fdb6c-af0f-4132-8418-b3edb5d06c0d")
                 .setPickupLocation(currentLatitude, currentLongitude, "Current Location", "")
                 .setDropoffLocation(destinationLatitude, destinationLongitude, (String) place.getName(), "")
                 .build();
 
         // Uber API Config
         SessionConfiguration uberConfig = new SessionConfiguration.Builder()
-                .setClientId("-")
-                .setServerToken("-")
+                .setClientId(Keys.UBER_CLIENT_ID)
+                .setServerToken(Keys.UBER_SERVER_TOKEN)
                 .setRedirectUri("http://localhost:3000")
                 .setScopes(Arrays.asList(Scope.RIDE_WIDGETS))
                 .setEnvironment(SessionConfiguration.Environment.SANDBOX)
