@@ -5,3 +5,7 @@ Our android application provides a map, search bar, and two buttons that redirec
 Uber: https://developer.uber.com/
 
 Lyft: https://www.lyft.com/developers
+
+Google Maps for Android: https://developers.google.com/maps/documentation/android-sdk/intro
+
+Google Places: https://developers.google.com/places/web-service/autocomplete
