@@ -174,11 +174,7 @@ public class Cars extends AppCompatActivity implements
         destinationLatitude = destination.latitude;
         destinationLongitude = destination.longitude;
 
-
-        // Create the ride request object to be used on Cars Activity
         RideRequestButton uberRequestButton = findViewById(R.id.uberRequestButton);
-        //ConstraintLayout layout = new ConstraintLayout(this);
-        //layout.addView(uberRequestButton);
 
         // set parameters for the uber ride button
         RideParameters rideParams = new RideParameters.Builder()
